@@ -63,7 +63,7 @@ class ClangTidyCommand(sublime_plugin.TextCommand):
         clangtidy_bin = which(self.settings.get("clang-tidy"))
         if clangtidy_bin is None:
             return sublime.error_message(
-                "Clang Tidy: can not find {0} in path.".format(self.settings.get("clang-tidy"))
+                "Clang Tidy: can not find {0} in path.".format(self.settings.get("clang-tidy")))
         cmd_list = [clangtidy_bin, "-checks=-*,clang-analyzer-*,cppcoreguidelines-*,-clang-analyzer-cplusplus-*", self.filename, "--", "-std=c++1z", "-g", "-Wall", "-Wextra", "-Wformat", "-Werror", "-pedantic", "-fms-compatibility-version=19"] + self.settings.get("args", [])
         self.save_viewport_state()
         (exit_code, err) = self.pipe(cmd_list)
