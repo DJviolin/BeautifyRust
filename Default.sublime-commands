@@ -1,6 +1,6 @@
 [
   {
-    "caption": "BeautifyRust",
-    "command": "beautify_rust"
+    "caption": "ClangTidy",
+    "command": "clang_tidy"
   }
 ]

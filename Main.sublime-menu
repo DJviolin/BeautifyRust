@@ -6,7 +6,7 @@
         "id": "wrap"
       },
       {
-        "command": "beautify_rust"
+        "command": "clang_tidy"
       }
     ]
   },
@@ -19,26 +19,26 @@
         "id": "package-settings",
         "children": [
           {
-            "caption": "BeautifyRust",
+            "caption": "ClangTidy",
             "children": [
               {
                 "command": "open_file",
                 "args": {
-                  "file": "${packages}/BeautifyRust/BeautifyRust.sublime-settings"
+                  "file": "${packages}/ClangTidy/ClangTidy.sublime-settings"
                 },
                 "caption": "Settings – Default"
               },
               {
                 "command": "open_file",
                 "args": {
-                  "file": "${packages}/User/BeautifyRust.sublime-settings"
+                  "file": "${packages}/User/ClangTidy.sublime-settings"
                 },
                 "caption": "Settings - User"
               },
               {
                 "command": "open_file",
                 "args": {
-                  "file": "${packages}/BeautifyRust/Default (Windows).sublime-keymap",
+                  "file": "${packages}/ClangTidy/Default (Windows).sublime-keymap",
                   "platform": "Windows"
                 },
                 "caption": "Key Bindings – Default"
@@ -46,7 +46,7 @@
               {
                 "command": "open_file",
                 "args": {
-                  "file": "${packages}/BeautifyRust/Default (OSX).sublime-keymap",
+                  "file": "${packages}/ClangTidy/Default (OSX).sublime-keymap",
                   "platform": "OSX"
                 },
                 "caption": "Key Bindings – Default"
@@ -54,7 +54,7 @@
               {
                 "command": "open_file",
                 "args": {
-                  "file": "${packages}/BeautifyRust/Default (Linux).sublime-keymap",
+                  "file": "${packages}/ClangTidy/Default (Linux).sublime-keymap",
                   "platform": "Linux"
                 },
                 "caption": "Key Bindings – Default"

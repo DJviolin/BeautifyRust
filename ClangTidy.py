@@ -3,7 +3,7 @@ import sublime
 import sublime_plugin
 import subprocess
 
-SETTINGS_FILE = "BeautifyRust.sublime-settings"
+SETTINGS_FILE = "ClangTidy.sublime-settings"
 
 
 def which(program):
@@ -22,25 +22,26 @@ def which(program):
     return None
 
 
-class BeautifyRustOnSave(sublime_plugin.EventListener):
+class ClangTidyOnSave(sublime_plugin.EventListener):
 
     def on_post_save(self, view):
         if sublime.load_settings(SETTINGS_FILE).get("run_on_save", False):
-            return view.run_command("beautify_rust")
+            return view.run_command("clang_tidy")
         return
 
 
-class BeautifyRustCommand(sublime_plugin.TextCommand):
+class ClangTidyCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         self.filename = self.view.file_name()
         self.fname = os.path.basename(self.filename)
         self.settings = sublime.load_settings(SETTINGS_FILE)
-        if self.is_rust_file():
+        if self.is_c_file():
             self.run_format(edit)
 
-    def is_rust_file(self):
-        return self.fname.endswith(".rs")
+    def is_c_file(self):
+        ext = [".c", ".cpp", ".h"]
+        return self.fname.endswith(tuple(ext))
 
     def pipe(self, cmd):
         cwd = os.path.dirname(self.filename)
@@ -59,19 +60,19 @@ class BeautifyRustCommand(sublime_plugin.TextCommand):
         buffer_text = self.view.substr(buffer_region)
         if buffer_text == "":
             return
-        rustfmt_bin = which(self.settings.get("rustfmt", "rustfmt"))
-        if rustfmt_bin is None:
+        clang-tidy_bin = which(self.settings.get("clang-tidy", "clang-tidy"))
+        if clang-tidy_bin is None:
             return sublime.error_message(
-                "Beautify rust: can not find {0} in path.".format(self.settings.get("rustfmt", "rustfmt")))
-        cmd_list = [rustfmt_bin, self.filename, "--write-mode=overwrite"] + self.settings.get("args", [])
+                "Clang Tidy: can not find {0} in path.".format(self.settings.get("clang-tidy", "clang-tidy")))
+        cmd_list = [clang-tidy_bin, "-checks=-*,clang-analyzer-*,cppcoreguidelines-*,-clang-analyzer-cplusplus-*", self.filename, "--", "-std=c++1z", "-g", "-Wall", "-Wextra", "-Wformat", "-Werror", "-pedantic", "-fms-compatibility-version=19"] + self.settings.get("args", [])
         self.save_viewport_state()
         (exit_code, err) = self.pipe(cmd_list)
-        if exit_code != 0 or (err != "" and not err.startswith("Using rustfmt")):
+        if exit_code != 0 or (err != "" and not err.startswith("Using clang-tidy")):
             self.view.replace(edit, buffer_region, buffer_text)
             print("failed: exit_code: {0}\n{1}".format(exit_code, err))
             if sublime.load_settings(SETTINGS_FILE).get("show_errors", True):
                 sublime.error_message(
-                    "Beautify rust: rustfmt process call failed. See log (ctrl + `) for details.")
+                    "Clang Tidy: clang-tidy process call failed. See log (ctrl + `) for details.")
         self.view.window().run_command("reload_all_files")
         self.reset_viewport_state()
 
